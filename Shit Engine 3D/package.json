@@ -1,0 +1,28 @@
+{
+  "name": "shit-engine-3-d",
+  "version": "0.0.0",
+  "description": "Shit Engine 3D",
+  "main": "dist/app.js",
+  "author": {
+    "name": ""
+  },
+  "scripts": {
+    "start": "electron .",
+    "build": "tsc --build && npm run start",
+    "clean": "tsc --build --clean",
+    "watch": "cls && tsc-watch --noClear -p ./tsconfig.json --onFirstSuccess \"npm run start\"",
+    "watch--disable-vsync": "cls && tsc-watch --noClear -p ./tsconfig.json --onFirstSuccess \"electron . --disable-frame-rate-limit --disable-frame-limit\""
+  },
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/gl-matrix": "^3.2.0",
+    "@types/node": "^14.14.7",
+    "@webgpu/types": "^0.1.21",
+    "electron": "^19.0.8",
+    "electron-nightly": "^21.0.0-nightly.20220708",
+    "gl-matrix": "^3.4.3",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.0.5",
+    "webgpu": "^0.1.16"
+  }
+}
