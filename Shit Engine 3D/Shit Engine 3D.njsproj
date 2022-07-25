@@ -29,10 +29,13 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="shaders\shader.frag.glsl" />
+    <Content Include="shaders\shader.vert.glsl" />
     <Content Include="shaders\shader.wgsl" />
     <Content Include="shaders\s_init.gs" />
     <Content Include="src\public\engine\shaders\cube.fragment.wgsl" />
     <Content Include="src\public\engine\shaders\cube.vertex.wgsl" />
+    <Content Include="src\public\engine\utils\textures.ts" />
     <Content Include="tsconfig.json" />
     <Content Include="views\index.html" />
     <None Include="src\app.ts" />
@@ -45,6 +48,8 @@
     <Folder Include="src\public\engine\meshes\" />
     <Folder Include="src\public\engine\shaders\" />
     <Folder Include="src\public\engine\utils\" />
+    <Folder Include="src\public\engine_gl\" />
+    <Folder Include="src\public\engine_gl\utils\" />
     <Folder Include="src\public\shit\" />
     <Folder Include="views\" />
     <Folder Include="src\" />
@@ -67,7 +72,18 @@
     <TypeScriptCompile Include="src\public\engine\utils\keyboard.ts" />
     <TypeScriptCompile Include="src\public\engine\utils\shaderLoader.ts" />
     <TypeScriptCompile Include="src\public\engine\utils\utils.ts" />
-    <TypeScriptCompile Include="src\public\main.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\main.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\animations.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\colors.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\easings.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\gamepad.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\image.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\json.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\keyboard.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\shaderLoader.ts" />
+    <TypeScriptCompile Include="src\public\engine_gl\utils\utils.ts" />
+    <TypeScriptCompile Include="src\public\main.wgl.ts" />
+    <TypeScriptCompile Include="src\public\main.wgpu.ts" />
     <TypeScriptCompile Include="src\public\shit\index.ts" />
     <TypeScriptCompile Include="src\public\shit\renderer.ts" />
     <TypeScriptCompile Include="src\public\shit\shaderLoader.ts" />

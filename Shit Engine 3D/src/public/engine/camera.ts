@@ -1,4 +1,4 @@
-import { mat3, mat4, vec3 } from "gl-matrix";
+import { mat3, mat4, vec3, vec4 } from "gl-matrix";
 
 // Interfaces and types.
 
@@ -23,13 +23,15 @@ export type CameraFarValue = number;
 
 export class Camera {
 
+	public lookAt: vec3 = vec3.fromValues(0, 0, 0);
+
 	declare public position: CameraPosition;
 	declare public rotation: CameraRotation;
 
 	declare public fovy: CameraFieldOfViewY;
 	declare public aspect: CameraAspect;
 	declare public near: CameraNearValue;
-	declare public far: CameraFarValue;
+	declare public far: CameraFarValue; 
 
 	constructor(position: CameraPosition | null, rotation: CameraRotation | null, fovy: CameraFieldOfViewY, aspect: CameraAspect, near: CameraNearValue, far: CameraFarValue) {
 
@@ -66,7 +68,7 @@ export class Camera {
 
 		const currentPosition: vec3 = vec3.fromValues(this.position.x, this.position.y, this.position.z);
 
-		mat4.lookAt(viewMatrix, currentPosition, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 1, 0));
+		mat4.lookAt(viewMatrix, currentPosition, this.lookAt, vec3.fromValues(0, 1, 0));
 
 		mat4.rotateX(viewMatrix, viewMatrix, this.rotation.x);
 		mat4.rotateY(viewMatrix, viewMatrix, this.rotation.y);

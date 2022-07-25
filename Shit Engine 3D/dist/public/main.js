@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const engine_1 = require("./engine");
 const keyboard_1 = require("./engine/utils/keyboard");
-const utils_1 = require("./engine/utils/utils");
 const renderer = new engine_1.Renderer(document.querySelector(".renderer"), innerWidth, innerHeight);
 const camera = new engine_1.Camera(null, null, (2 * Math.PI) / 5, innerWidth / innerHeight, 1, 1000);
 const scene = new engine_1.Scene();
@@ -39,18 +38,16 @@ updater.On("update", function (deltaTime) {
     uiCameraRotation.innerText = `Camera rotation: ${camera.rotation.x.toFixed(3)} ${camera.rotation.y.toFixed(3)} ${camera.rotation.z.toFixed(3)}`;
 });
 renderer.On("ready", function () {
-    for (let i = 0; i < 224; i++) {
+    camera.position.y = 16;
+    camera.position.z = 2;
+    for (let i = 0; i < 32; i++) {
+        const distance = (innerWidth / innerHeight) * i;
         const position = {
-            x: (0, utils_1.RandomBetween)(-60, 60),
-            y: (0, utils_1.RandomBetween)(-60, 60),
-            z: (0, utils_1.RandomBetween)(50, -50)
+            x: 0,
+            y: -1,
+            z: distance
         };
-        const rotation = {
-            x: (0, utils_1.RandomBetween)(-5, 5),
-            y: (0, utils_1.RandomBetween)(-5, 5),
-            z: (0, utils_1.RandomBetween)(-5, -5)
-        };
-        const cube = new engine_1.Cube(position, rotation);
+        const cube = new engine_1.Cube(position, null);
         scene.AddObject(cube);
     }
 });

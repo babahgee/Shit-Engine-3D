@@ -7,7 +7,7 @@ import { app, BrowserWindow } from "electron";
 
 app.commandLine.appendSwitch('enable-unsafe-webgpu');
 
-app.once("ready", function () {
+app.once("ready", async function () {
 
 	const window: BrowserWindow = new BrowserWindow({
         width: 700,
@@ -35,6 +35,8 @@ app.once("ready", function () {
 
     window.show();
 
+
+    // await window.loadURL("https://webkit.org/demos/webgpu/textured-cube.html");
 
     window.loadURL(url.format({
         pathname: path.join(__dirname, "../", "views", "index.html"),

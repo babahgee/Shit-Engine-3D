@@ -9,8 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Texture = exports.Cube = exports.Scene = exports.Camera = exports.RenderObject = exports.Updater = exports.Renderer = exports.getGPUDevice = exports.lightDataBuffer = exports.cameraUniformBuffer = exports.device = void 0;
-const scene_1 = require("./scene");
+exports.Cube = exports.Scene = exports.Camera = exports.RenderObject = exports.Updater = exports.Renderer = exports.getGPUDevice = exports.device = void 0;
 const utils_1 = require("./utils/utils");
 function getGPUDevice() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -24,7 +23,6 @@ exports.getGPUDevice = getGPUDevice;
 class Renderer {
     constructor(canvasElement, width, height) {
         this.events = {};
-        this.matrixSize = 4 * 16;
         this.width = width;
         this.height = height;
         this.domElement = canvasElement;
@@ -47,22 +45,11 @@ class Renderer {
     Render(camera, scene) {
         if (!this.hasInitialized)
             return;
-        // Camera buffer injection.
-        const cameraProjection = camera.GetCameraProjectionMatrix();
-        exports.device.queue.writeBuffer(exports.cameraUniformBuffer, 0, cameraProjection.buffer, cameraProjection.byteOffset, cameraProjection.byteLength);
-        // Light buffer injection.
-        const lightPostion = scene.pointLightPosition;
-        exports.device.queue.writeBuffer(exports.lightDataBuffer, 0, lightPostion.buffer, lightPostion.byteOffset, lightPostion.byteLength);
         this.renderPassDescriptor.colorAttachments[0].view = this.ctx.getCurrentTexture().createView();
         const commandEncoder = this.device.createCommandEncoder();
         const passEncoder = commandEncoder.beginRenderPass(this.renderPassDescriptor);
         for (let object of scene.objects) {
-            const distanceX = Math.abs(object.position.x - camera.position.x);
-            const distanceY = Math.abs(object.position.y - camera.position.y);
-            const distanceZ = Math.abs(object.position.z - camera.position.z);
-            if (distanceX < camera.far && distanceY < camera.far && distanceZ < camera.far) {
-                object.draw(passEncoder, this.device);
-            }
+            object.draw(passEncoder, this.device, camera);
         }
         passEncoder.end();
         this.device.queue.submit([commandEncoder.finish()]);
@@ -75,7 +62,7 @@ class Renderer {
             exports.device = this.device;
             console.log("%cGPU device has been initialized. GPU limits are being showed down below.", "color: lime");
             console.log(exports.device.limits);
-            this.format = "bgra8unorm";
+            this.format = yield navigator.gpu.getPreferredCanvasFormat();
             this.ctx = this.domElement.getContext("webgpu");
             if (this.ctx !== null)
                 console.log("%cRendering context has been set.", "color: gray");
@@ -100,14 +87,6 @@ class Renderer {
                     stencilStoreOp: 'store',
                 },
             };
-            exports.cameraUniformBuffer = exports.device.createBuffer({
-                size: this.matrixSize,
-                usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-            });
-            exports.lightDataBuffer = exports.device.createBuffer({
-                size: scene_1.lightDataSize,
-                usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-            });
             this.hasInitialized = true;
             if (typeof this.events.ready === "function")
                 this.events.ready(this);
@@ -171,9 +150,7 @@ var renderobject_1 = require("./renderobject");
 Object.defineProperty(exports, "RenderObject", { enumerable: true, get: function () { return renderobject_1.RenderObject; } });
 var camera_1 = require("./camera");
 Object.defineProperty(exports, "Camera", { enumerable: true, get: function () { return camera_1.Camera; } });
-var scene_2 = require("./scene");
-Object.defineProperty(exports, "Scene", { enumerable: true, get: function () { return scene_2.Scene; } });
+var scene_1 = require("./scene");
+Object.defineProperty(exports, "Scene", { enumerable: true, get: function () { return scene_1.Scene; } });
 var cube_1 = require("./meshes/cube");
 Object.defineProperty(exports, "Cube", { enumerable: true, get: function () { return cube_1.Cube; } });
-var textures_1 = require("./utils/textures");
-Object.defineProperty(exports, "Texture", { enumerable: true, get: function () { return textures_1.Texture; } });

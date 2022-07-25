@@ -5,7 +5,6 @@ const gl_matrix_1 = require("gl-matrix");
 // Classes
 class Camera {
     constructor(position, rotation, fovy, aspect, near, far) {
-        this.lookAt = gl_matrix_1.vec3.fromValues(0, 0, 0);
         if (position !== null) {
             this.position = position;
         }
@@ -34,7 +33,7 @@ class Camera {
     GetViewMatrix() {
         const viewMatrix = gl_matrix_1.mat4.create();
         const currentPosition = gl_matrix_1.vec3.fromValues(this.position.x, this.position.y, this.position.z);
-        gl_matrix_1.mat4.lookAt(viewMatrix, currentPosition, this.lookAt, gl_matrix_1.vec3.fromValues(0, 1, 0));
+        gl_matrix_1.mat4.lookAt(viewMatrix, currentPosition, gl_matrix_1.vec3.fromValues(0, 0, 0), gl_matrix_1.vec3.fromValues(0, 1, 0));
         gl_matrix_1.mat4.rotateX(viewMatrix, viewMatrix, this.rotation.x);
         gl_matrix_1.mat4.rotateY(viewMatrix, viewMatrix, this.rotation.y);
         gl_matrix_1.mat4.rotateZ(viewMatrix, viewMatrix, this.rotation.z);

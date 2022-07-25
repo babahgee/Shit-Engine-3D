@@ -1,6 +1,6 @@
 import { Camera } from "./camera";
 import { RenderObject } from "./renderobject";
-import { Scene } from "./scene";
+import { lightDataSize, Scene } from "./scene";
 import { GenerateUniqueID } from "./utils/utils";
 
 // Global interfaces and types
@@ -18,6 +18,8 @@ export type UpdaterEventNames = "update";
 // Global Variables, classes and functions.
 
 export let device: GPUDevice;
+export let cameraUniformBuffer: GPUBuffer;
+export let lightDataBuffer: GPUBuffer;
 
 export async function getGPUDevice(): Promise<GPUDevice> {
 
@@ -47,6 +49,7 @@ export class Renderer {
 	declare private renderPassDescriptor: GPURenderPassDescriptor;
 
 	private events: {[key: string]: Function} = {};
+	private matrixSize: number = 4 * 16;
 
 	public constructor(canvasElement: HTMLCanvasElement, width: number, height: number) {
 
@@ -86,15 +89,35 @@ export class Renderer {
 
 		if (!this.hasInitialized) return;
 
+		// Camera buffer injection.
+		const cameraProjection = camera.GetCameraProjectionMatrix() as Float32Array;
+		device.queue.writeBuffer(cameraUniformBuffer, 0, cameraProjection.buffer, cameraProjection.byteOffset, cameraProjection.byteLength);
+
+		// Light buffer injection.
+		const lightPostion = scene.pointLightPosition;
+		device.queue.writeBuffer(lightDataBuffer, 0, lightPostion.buffer, lightPostion.byteOffset, lightPostion.byteLength);
+
+
 		(this.renderPassDescriptor.colorAttachments as [GPURenderPassColorAttachment])[0].view = this.ctx.getCurrentTexture().createView();
 
 		const commandEncoder = this.device.createCommandEncoder();
 		const passEncoder: GPURenderPassEncoder = commandEncoder.beginRenderPass(this.renderPassDescriptor);
 
 
+
+
+	
 		for (let object of scene.objects) {
 
-			object.draw(passEncoder, this.device, camera);
+			const distanceX = Math.abs(object.position.x - camera.position.x);
+			const distanceY = Math.abs(object.position.y - camera.position.y);
+			const distanceZ = Math.abs(object.position.z - camera.position.z);
+
+			if (distanceX < camera.far && distanceY < camera.far && distanceZ < camera.far) {
+
+				object.draw(passEncoder, this.device);
+
+			}
 		}
 
 		passEncoder.end();
@@ -115,8 +138,9 @@ export class Renderer {
 		console.log("%cGPU device has been initialized. GPU limits are being showed down below.", "color: lime");
 		console.log(device.limits);
 		
-		this.format = await navigator.gpu.getPreferredCanvasFormat();
+		this.format = "bgra8unorm";
 
+	
 		this.ctx = this.domElement.getContext("webgpu") as GPUCanvasContext;
 
 		if (this.ctx !== null) console.log("%cRendering context has been set.", "color: gray");
@@ -143,6 +167,16 @@ export class Renderer {
 				stencilStoreOp: 'store',
 			},
 		}
+
+		cameraUniformBuffer = device.createBuffer({
+			size: this.matrixSize,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
+
+		lightDataBuffer = device.createBuffer({
+			size: lightDataSize,
+			usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+		});
 
 		this.hasInitialized = true;
 
@@ -243,3 +277,4 @@ export { RenderObject } from "./renderobject";
 export { Camera, CameraNearValue, CameraRotation, CameraPosition, CameraAspect, CameraFarValue, CameraFieldOfViewY } from "./camera";
 export { Scene } from "./scene";
 export { Cube } from "./meshes/cube";
+export { Texture } from "./utils/textures";

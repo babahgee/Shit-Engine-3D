@@ -16,7 +16,24 @@ export interface RenderObjectRotation {
 	z: number;
 }
 
+export interface RenderObjectScaling {
+	x: number;
+	y: number;
+	z: number;
+}
 
+export interface PlainColor {
+	r: number;
+	g: number;
+	b: number;
+	a: number;
+}
+
+export interface Color {
+	r: number;
+	g: number;
+	b: number;
+}
 
 
 // Classes and functions. 
@@ -28,20 +45,23 @@ export class RenderObject {
 
 	public position: RenderObjectPosition = { x: 0, y: 0, z: 0 };
 	public rotation: RenderObjectRotation = { x: 0, y: 0, z: 0 };
+	public scale: RenderObjectScaling = { x: 1, y: 1, z: 1 };
 
 	public matrixSize = 4 * 16;
 	public offset = 256;
-	public uniformBufferSize = this.matrixSize + this.offset;
+	public uniformBufferSize = this.offset;
 
-	public modelViewProjectionMatrix: Float32Array = mat4.create() as Float32Array;
+	public transformMatrix = mat4.create() as Float32Array;
+	public rotateMatrix = mat4.create() as Float32Array;
 
 	declare public renderPipeline: GPURenderPipeline;
-	declare public uniformBuffer: GPUBuffer;
-	declare public uniformBindGroup: GPUBindGroup;
-	declare public verticesBuffer: GPUBuffer;
-	declare public vertexCount: number;
+	declare public transformationBuffer: GPUBuffer;
+	declare public transformationBindGroup: GPUBindGroup;
 
-	public draw(passEncoder: GPURenderPassEncoder, device: GPUDevice, camera: Camera): void {
+	declare public verticesBuffer: GPUBuffer;
+	declare public colorBuffer: GPUBuffer;
+
+	public draw(passEncoder: GPURenderPassEncoder, device: GPUDevice): void {
 
 	}
 }

@@ -10,14 +10,12 @@ class RenderObject {
         this.timestamp = Date.now();
         this.position = { x: 0, y: 0, z: 0 };
         this.rotation = { x: 0, y: 0, z: 0 };
-        this.scale = { x: 1, y: 1, z: 1 };
         this.matrixSize = 4 * 16;
         this.offset = 256;
-        this.uniformBufferSize = this.offset;
-        this.transformMatrix = gl_matrix_1.mat4.create();
-        this.rotateMatrix = gl_matrix_1.mat4.create();
+        this.uniformBufferSize = this.matrixSize + this.offset;
+        this.modelViewProjectionMatrix = gl_matrix_1.mat4.create();
     }
-    draw(passEncoder, device) {
+    draw(passEncoder, device, camera) {
     }
 }
 exports.RenderObject = RenderObject;

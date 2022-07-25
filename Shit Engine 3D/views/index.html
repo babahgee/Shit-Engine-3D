@@ -13,13 +13,12 @@
         }
 
             div.ui {
-                width: 190px;
+                width: 180px;
                 height: 320px;
                 position: fixed;
-                top: 20px;
+                top: 40px;
                 left: 20px;
                 z-index: 1000;
-                background: #1d1d1d;
                 user-select: none;
                 padding: 30px;
                 overflow-x: hidden;
@@ -27,7 +26,7 @@
             }
 
         .ui-row {
-            width: 100%;
+            width: 108%;
             height: auto;
             padding: 5px 0px;
         }
@@ -55,6 +54,6 @@
 
     <canvas class="renderer" data-id="webgpu-renderer" width="0" height="0"></canvas>
 
-    <script type="text/javascript" defer async>(function (w, p) { if (typeof require === "function") require(p); })(window, "../dist/public/main.js");</script>
+    <script type="text/javascript" defer async>(function (w, p) { if (typeof require === "function") require(p); })(window, "../dist/public/main.wgpu.js");</script>
 </body>
 </html>
